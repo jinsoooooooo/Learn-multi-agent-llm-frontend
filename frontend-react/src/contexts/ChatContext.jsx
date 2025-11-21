@@ -55,7 +55,7 @@ export function ChatProvider({ children }) {
          }
     ]);
     const [activeAgent, setActiveAgent] = useState(agents[0]);
-    const [userId, setUserId] = useState("jinsoo"); 
+    const [userId, setUserId] = useState("react.user"); 
     const [chatMessageInput, setChatMessageInput] = useState('');
     const [keywordInputs, setKeywordInputs] = useState(['', '', '']);
     const [messages, setMessages] = useState([]);
@@ -127,7 +127,9 @@ export function ChatProvider({ children }) {
         setChatMessageInput('');
         setKeywordInputs(['', '', '']);
         
-        const fullApiPath = "http://127.0.0.1:8000" + activeAgent.apiPath;
+        // const fullApiPath = "http://127.0.0.1:8000" + activeAgent.apiPath;
+        const fullApiPath = import.meta.env.VITE_API_URL + activeAgent.apiPath;
+        console.log(`fullApiPath: ${fullApiPath}`);
         console.log(`[${activeAgent.name} 에이전트로 전송: ${messageToSend}`);
         
         if (activeAgent.mode === 'Chat') {
