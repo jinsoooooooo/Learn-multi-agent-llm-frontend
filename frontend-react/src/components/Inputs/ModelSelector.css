@@ -1,0 +1,66 @@
+/* ModelSelector.css (Sidebar Dark Theme Version) */
+.model-selector-form {
+  /* UserProfile과의 간격을 위해 아래쪽 마진은 유지합니다. */
+  margin-top: auto; /* Flexbox 안에서, 남은 수직 공간을 모두 자신의 위쪽 마진으로 만듭니다. */
+  /* 나머지 스타일은 그대로 둡니다. */
+  margin-bottom: 0px; 
+  width: 100%;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.model-selector-select {
+  width: 100%;
+  padding: 10px 30px 10px 15px; /* 좌측 패딩을 늘려 텍스트 위치 조정 */
+  border-radius: 8px; /* 사이드바 다른 요소들과 통일 */
+  border: 1px solid #4f5c56; /* 어두운 경계선 색상 */
+  
+  /* --- 👇 [핵심] 다크 테마 색상 적용 --- */
+  background-color: #4a78b1; /* AgentMenu, UserProfile과 동일한 배경색 */
+  color: #f0f2f5; /* 사이드바 기본 텍스트 색상 */
+
+  font-size: 0.9rem; /* 다른 메뉴와 비슷하게 가독성을 위해 약간 키움 */
+  font-weight: 500;
+  cursor: pointer;
+  appearance: none; /* 브라우저 기본 스타일 제거는 필수 */
+
+  /* 그림자 효과 대신 미묘한 전환 효과 추가 */
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  
+  /* box-sizing 추가하여 패딩/보더가 너비에 영향을 주지 않도록 함 */
+  box-sizing: border-box; 
+}
+
+/* select 위에 마우스를 올렸을 때의 효과 */
+.model-selector-select:hover {
+  background-color: #c0992f; /* AgentMenu hover 색상과 동일하게 */
+}
+
+/* select를 클릭(포커스)했을 때의 효과 */
+.model-selector-select:focus {
+  outline: none;
+  border-color: #a4c639; /* Global.css의 포인트 색상 */
+  /* 그림자 효과도 포인트 색상에 맞게 수정 */
+  box-shadow: 0 0 0 2px rgba(164, 198, 57, 0.4); 
+}
+
+/* 커스텀 화살표 아이콘 스타일 */
+.select-wrapper::after {
+  content: '▼';
+  font-size: 12px;
+  /* 화살표 색상도 사이드바 테마에 맞게 조정 */
+  color: #99aab5; 
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+/* select 위에 마우스를 올렸을 때 화살표 색상 변경 */
+.select-wrapper:hover::after {
+  color: #fff;
+}

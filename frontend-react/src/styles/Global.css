@@ -23,10 +23,11 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 로고/메뉴와 프로필을 상단/하단으로 분리 */
+    justify-content: space-between;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0; /* 사이드바 크기 고정 */
+    flex-shrink: 0;
 }
+
 
 .logo {
     font-size: 1.8rem;
@@ -84,7 +85,7 @@ body {
     background-color: #3b3f44;
     padding: 15px;
     border-radius: 8px;
-    margin-top: 30px;
+    margin-top: 5px;
 }
 
 .avatar {
@@ -110,6 +111,16 @@ body {
     color: #bbb;
     font-size: 0.85rem;
 }
+
+.session-id-display {
+  font-size: 8px; /* 아주아주 작은 폰트 크기 */
+  color: #888;      /* 눈에 잘 띄지 않는 회색 */
+  margin-top: 2px;
+  font-family: monospace; /* 고정폭 글꼴로 ID처럼 보이게 함 */
+  letter-spacing: 0.5px;
+  user-select: all; /* 마우스로 쉽게 전체 선택이 가능하도록 함 */
+}
+
 
 
 /* 메인 콘텐츠 영역 스타일 */
@@ -296,7 +307,7 @@ body {
 
 * 키워드 입력 영역 컨테이너 스타일 */
 .keyword-input-area {
-    padding: 15px;
+    padding: 10px;
     background-color: #f0f2f5;
     border-top: 1px solid #eee;
     display: flex;
@@ -437,6 +448,17 @@ body {
 /** 숨김 클래스 **/
 .hidden {
     display: none !important;
+}
+
+
+/* --- 입력 컴포넌트들을 묶는 컨테이너 --- */
+.chat-input-zone {
+    background-color: #f0f2f5;
+    border-top: 1px solid #eee;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 입력 컴포넌트 사이의 간격 */
 }
 
 

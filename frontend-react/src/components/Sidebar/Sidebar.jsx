@@ -2,15 +2,22 @@
 import React from 'react';
 import AgentMenu from './AgentMenu';
 import UserProfile from './UserProfile';
+import ModelSelector from '../Inputs/ModelSelector';
 
 // 1. Sidebar 컴포넌트에서 모든 props를 제거합니다.
 function Sidebar() {
   return (
     <aside className="sidebar">
-      <div className="logo">AI CHAT PROFESSIONAL</div>
-      {/* 2. AgentMenu와 UserProfile에 더 이상 props를 전달하지 않습니다. */}
-      <AgentMenu />
-      <UserProfile />
+      <div>
+        <div className="logo">MULTI-AGENT</div>
+        <AgentMenu />
+      </div>
+
+      {/* --- 👇 [핵심] 이 div에 className을 추가합니다 --- */}
+      <div className="sidebar-bottom">
+        <ModelSelector />
+        <UserProfile />
+      </div>
     </aside>
   );
 }
