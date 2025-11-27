@@ -44,15 +44,18 @@ export function ChatProvider({ children }) {
       { name: '뉴스큐레이션', apiPath: '/api/news', mode: 'Chat', messages: [],
         recommendations: ['AI 관련 뉴스 3개', '경제 동향 요약','추천','추천','추천']
         },
+      { name: 'Streaming 샘플', apiPath: '/api/test/stream', mode: 'Stream', method: 'POST', messages: [] , 
+        recommendations: ['스트림', 'Event Stream', '1장,2장,3장','추천','추천']
+      },
       { name: 'Langchain채팅', apiPath: '/api/langchain/chat', mode: 'Chat', messages: [], 
         recommendations: ['안녕 오늘 날씨 어때?', 'LangChain이 뭐야?', 'React에 대해 설명해줘','추천']
       },
-      { name: 'StreamResponse', apiPath: '/api/stream', mode: 'Stream', method: 'POST', messages: [] , 
-        recommendations: ['스트림', 'Event Stream', '1장,2장,3장','추천','추천']
-      },
       { name: 'LangchainStream', apiPath: '/api/langchain/chatstream', method: 'POST', mode: 'Stream', messages: [],
         recommendations: ['내 이름은 곽준빈이야', '내 이름은?','내 이름은 jin이야','조선시대 왕 이름은?']
-        }
+        },
+      { name: 'RAG 채이닝 스트리밍', apiPath: '/api/rag/chat/stream', method: 'POST', mode: 'Stream', messages: [],
+        recommendations: ['이력서에서 프로젝트에 대해서 찾아서 요약 정리 해줘', '그룹웨어 관리자 메뉴얼은 어디있어?','추천']
+        }  
   ]);
   const [activeAgent, setActiveAgent] = useState(agents[0]);
   const [userId, setUserId] = useState("react.user"); 
@@ -64,7 +67,7 @@ export function ChatProvider({ children }) {
   // ---- 모델 목록 및 선택된 모델 정의 추가 
   const [modelList, setModelList] = useState([]);         // 1. 전체 모델 목록을 담을 상태
   const [selectedModel, setSelectedModel] = useState(''); // 2. 현재 선택된 모델을 담을 상태
-  const [sessionId, setSessionId] = useState(null); // 3. 현재 세션 ID를 담을 상태
+  const [chatId, setchatId] = useState(null); // 3. 현재 세션 ID를 담을 상태
 
   const { 
       streamData, 
@@ -81,6 +84,7 @@ export function ChatProvider({ children }) {
   // (스트리밍, 에러, 스크롤 관련 나머지 useEffect들도 모두 )
   useEffect(() => {
       if (activeAgent.mode === 'Stream' && isStreaming && streamData) {
+      // console.log('[debug] ','11111', activeAgent.mode , isStreaming, streamData , )
       setMessages(prevMessages => {
         const lastMessage = prevMessages[prevMessages.length - 1];
         if (lastMessage && lastMessage.type === 'agent' && lastMessage.isStreaming) {
@@ -95,12 +99,17 @@ export function ChatProvider({ children }) {
         return prevMessages;
       });
     } else if (activeAgent.mode === 'Stream' && !isStreaming && streamData) {
-        const lastMessage = messages[messages.length - 1];
+      // console.log('[debug] ','22222', activeAgent.mode , isStreaming, streamData , )
+        
+      const lastMessage = messages[messages.length - 1];
         if (lastMessage && lastMessage.isStreaming) {
           setMessages(prevMessages => prevMessages.map((msg, index) =>
             index === prevMessages.length - 1 ? { ...msg, isStreaming: false } : msg
           ));
         }
+    } else {
+      // console.log('[debug] ','33333', activeAgent.mode , isStreaming, streamData , )
+      
     }
   }, [streamData, isStreaming, activeAgent.mode]);
   
@@ -127,7 +136,7 @@ export function ChatProvider({ children }) {
         const data = await response.json();
 
         setModelList(data);         // 가져온 모델 목록을 상태에 저장
-        setSelectedModel(data[0]);  // 첫 번째 모델을 기본 선택 모델로 설정
+        setSelectedModel(data[2]);  // 첫 번째 모델을 기본 선택 모델로 설정
 
       } catch (e){
         console.error(e)
@@ -176,7 +185,7 @@ export function ChatProvider({ children }) {
                     "message": messageToSend, 
                     "keywords": currentKeywords,
                     "model": selectedModel,     // <-- 선택된 모델 추가
-                    "session_id": sessionId   // <-- 현재 세션 ID 추가 (처음엔 null)
+                    "Chat_id": chatId   // <-- 현재 세션 ID 추가 (처음엔 null)
                   }),
               });
   
@@ -187,9 +196,9 @@ export function ChatProvider({ children }) {
   
               const data = await res.json(); 
 
-              // 현재 sessionId가 없고, 응답으로 새 ID가 왔다면 상태를 업데이트합니다.
-              if (!sessionId && data.session_id) {
-                  setSessionId(data.session_id);
+              // 현재 chatId가 없고, 응답으로 새 ID가 왔다면 상태를 업데이트합니다.
+              if (!chatId && data.Chat_id) {
+                  setchatId(data.Chat_id);
               }
               
               setMessages(prevMessages => {
@@ -216,12 +225,35 @@ export function ChatProvider({ children }) {
       } else if (activeAgent.mode === 'Stream'){
         if (activeAgent.method === 'POST'){
           const body = {
+              chat_id: chatId,    // 현재 채팅 ID, 처음에는 null
               user_id: userId,
+              model: selectedModel,  // <-- 선택된 모델 추가
               message: messageToSend,
               keywords: keywordInputs.filter(kw => kw.trim() !== '')
           };
-          startStreamAction(fullApiPath, body);
-        }
+          console.log('body:', body)
+          
+          startStreamAction({
+            apiUrl: fullApiPath,
+            body: body,
+            // onNewChatId 콜백: 훅 내부에서 chat_id를 받으면 이 함수가 실행됩니다.
+            onNewChatId: (newChatId) => {
+              // ChatContext의 chatId 상태를 업데이트합니다.
+              setchatId(newChatId); 
+              console.log("새로운 Chat ID를 Context에 저장했습니다:", newChatId);
+            },
+            // (선택) onDone 콜백: 스트림이 성공적으로 끝나면 실행됩니다.
+            onDone: () => {
+              console.log("Context: 스트림이 성공적으로 완료되었습니다.");
+            },
+            // (선택) onError 콜백: 스트림 중 에러가 발생하면 실행됩니다.
+            onError: (err) => {
+              console.error("Context: 스트림에서 에러가 발생했습니다:", err.message);
+              // 에러 메시지를 화면에 표시할 수도 있습니다.
+              setMessages(prev => [...prev, { type: 'agent', content: `오류: ${err.message}` }]);
+            }
+          });
+      }
       }
   };
 
@@ -234,7 +266,7 @@ export function ChatProvider({ children }) {
         setMessages(agent.messages);
         setChatMessageInput('');
         setKeywordInputs(['', '', '']);
-        setSessionId(null);
+        setchatId(null);
   };
 
   const handleKeywordInputChange = (index, value) => {
@@ -282,7 +314,7 @@ export function ChatProvider({ children }) {
       modelList,
       selectedModel,
       setSelectedModel,
-      sessionId // session_id를 다른 컴포넌트에서 쓸 수 있도록 추가
+      chatId // Chat_id를 다른 컴포넌트에서 쓸 수 있도록 추가
 
   };
 
@@ -295,9 +327,9 @@ export function ChatProvider({ children }) {
 
 // 커스텀 훅 (이전 단계에서 완료)
 export function useChat() {
-    const context = useContext(ChatContext);
-    if (!context) {
-        throw new Error('useChat must be used within a ChatProvider');
-    }
-    return context;
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error('useChat must be used within a ChatProvider');
+  }
+  return context;
 }

@@ -1,5 +1,6 @@
 // frontend-react/src/components/Chat/ChatMessageList.jsx
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 // 1. useChat 훅을 import 합니다.
 import { useChat } from '../../contexts/ChatContext';
 
@@ -38,18 +39,19 @@ function ChatMessageList() {
         <div 
             key={index} 
             className={`chat-bubble ${msg.type}-bubble ${msg.isLoading || msg.isStreaming ? 'loading-bubble' : ''}`}
-            // ✅ [수정] contentType이 'html'일 때만 이 속성을 설정하고, 아닐 때는 undefined로 설정하여 속성 자체를 제거합니다.
+            // [수정] contentType이 'html'일 때만 이 속성을 설정하고, 아닐 때는 undefined로 설정하여 속성 자체를 제거합니다.
             dangerouslySetInnerHTML={msg.contentType === 'html' ? { __html: msg.content } : undefined}
         >
-            {/* ✅ [수정] contentType이 'text'일 때만 내용을 렌더링하고, 'html'일 때는 명시적으로 null을 반환하여 children이 없음을 보장합니다. */}
+            {/* [수정] contentType이 'text'일 때만 내용을 렌더링하고, 'html'일 때는 명시적으로 null을 반환하여 children이 없음을 보장합니다. */}
             {msg.contentType === 'text' ? (
               msg.isLoading ? (
                 <div className="loading-content">
                   <div className="spinner"></div>
-                  <span>{msg.content}</span>
+                    {/* <span>{msg.content}</span> */}
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
               ) : (
-                msg.content
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
               )
             ) : null}
         </div>
