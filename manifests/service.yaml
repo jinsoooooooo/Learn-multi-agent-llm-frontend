@@ -1,0 +1,22 @@
+# /learn_fornt_end_project/manifests/service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: llm-app-frontend
+spec:
+  # 프론트엔드 서비스 역시 기본적으로는 클러스터 내부 통신을 위한
+  # ClusterIP 타입을 사용합니다. 외부 노출은 Ingress에게 맡깁니다.
+  type: ClusterIP
+
+  # 이 Service가 'app: frontend' 꼬리표를 가진 파드들을 찾아 연결합니다.
+  selector:
+    app: frontend
+
+  ports:
+    - protocol: TCP
+      # Service 자체의 포트
+      port: 80
+      # 파드(Nginx 컨테이너)의 포트
+      targetPort: 80
