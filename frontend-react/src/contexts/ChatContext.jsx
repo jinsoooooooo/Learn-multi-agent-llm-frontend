@@ -36,24 +36,24 @@ export function ChatProvider({ children }) {
         recommendations: ['오늘 날씨 알려줘', '요즘 인기 있는 영화 추천해줘', '재미있는 농담 해봐','곽튜브의 이름은?']
       },
       { name: '회의실', apiPath: '/api/meeting', mode: 'Chat', messages: [], 
-        recommendations: ['다음 주 월요일 10시 회의실 예약해줘', '가장 가까운 빈 회의실 찾아줘','추천']
+        recommendations: ['회의실 예약 현황 알려줘','다음 주 월요일 10시 회의실 예약해줘', '가장 가까운 빈 회의실은?']
       },
       { name: '네이버뉴스', apiPath: '/api/naver_news', mode: 'Chat', messages: [],
         recommendations: ['최신 AI 기술','IT','취업시장','채용','추천']
         },
-      { name: '뉴스큐레이션', apiPath: '/api/news', mode: 'Chat', messages: [],
-        recommendations: ['AI 관련 뉴스 3개', '경제 동향 요약','추천','추천','추천']
-        },
+      // { name: '뉴스큐레이션', apiPath: '/api/news', mode: 'Chat', messages: [],
+      //   recommendations: ['AI 관련 뉴스 3개', '경제 동향 요약','추천','추천','추천']
+      //   },
+      { name: 'Langchain채팅 (Redis)', apiPath: '/api/langchain/chat', mode: 'Chat', messages: [], 
+        recommendations: ['곽튜브의 이름은?', '내 이름은?', '오늘 날시 알려줘','LangChain이 뭐야?','추천']
+      },
       { name: 'Streaming 샘플', apiPath: '/api/test/stream', mode: 'Stream', method: 'POST', messages: [] , 
         recommendations: ['스트림', 'Event Stream', '1장,2장,3장','추천','추천']
       },
-      { name: 'Langchain채팅', apiPath: '/api/langchain/chat', mode: 'Chat', messages: [], 
-        recommendations: ['안녕 오늘 날씨 어때?', 'LangChain이 뭐야?', 'React에 대해 설명해줘','추천']
-      },
-      { name: 'LangchainStream', apiPath: '/api/langchain/chatstream', method: 'POST', mode: 'Stream', messages: [],
-        recommendations: ['내 이름은 곽준빈이야', '내 이름은?','내 이름은 jin이야','조선시대 왕 이름은?']
-        },
-      { name: 'RAG 채이닝 스트리밍', apiPath: '/api/rag/chat/stream', method: 'POST', mode: 'Stream', messages: [],
+      // { name: 'LangchainStream', apiPath: '/api/langchain/chatstream', method: 'POST', mode: 'Stream', messages: [],
+      //   recommendations: ['내 이름은 곽준빈이야', '내 이름은?','내 이름은 jin이야','조선시대 왕 이름은?']
+      //   },
+      { name: 'RAG+체이닝 스트리밍', apiPath: '/api/rag/chat/stream', method: 'POST', mode: 'Stream', messages: [],
         recommendations: ['이력서에서 프로젝트에 대해서 찾아서 요약 정리 해줘', '그룹웨어 관리자 메뉴얼은 어디있어?','추천']
         }  
   ]);
@@ -195,11 +195,11 @@ export function ChatProvider({ children }) {
               }
   
               const data = await res.json(); 
-
+              console.log('data:',data)
               // 현재 chatId가 없고, 응답으로 새 ID가 왔다면 상태를 업데이트합니다.
-              if (!chatId && data.Chat_id) {
-                  setchatId(data.Chat_id);
-              }
+              if (!chatId && data.chat_id) {
+                  setchatId(data.chat_id);
+              } 
               
               setMessages(prevMessages => {
                   const updatedMessages = prevMessages.filter(msg => !msg.isLoading);
@@ -207,7 +207,8 @@ export function ChatProvider({ children }) {
                   let agentResponseContent = '';
                   let agentResponseContentType = 'text';
   
-                  if (activeAgent.name === '네이버뉴스' || activeAgent.name === '뉴스큐레이션') {
+                  // if (activeAgent.name === '네이버뉴스' || activeAgent.name === '뉴스큐레이션') {
+                  if (activeAgent.name === '뉴스큐레이션') {
                       agentResponseContent = createNewsHtml(data);
                       agentResponseContentType = 'html';
                   } else {
@@ -265,7 +266,7 @@ export function ChatProvider({ children }) {
         setActiveAgent(agent);
         setMessages(agent.messages);
         setChatMessageInput('');
-        setKeywordInputs(['', '', '']);
+        setKeywordInputs(['SK하이닉스', '', '']);
         setchatId(null);
   };
 
