@@ -21,10 +21,10 @@ RUN npm install
 COPY ./frontend-react ./
 
 # API 호출 url 이 로컬에서는 .env 파일로 fastapi를 지정하지만
-# docker에서는 절대경로/상대경로를 사용해야한다 즉 VITE_API_URL에 "" 빈 값이 엇어야만 한다 -> 변수선언 필수
+# docker에서는 절대경로/상대경로를 사용해야한다 즉 VITE_API_URL에 "" 빈 값이 있어야만 한다 -> 변수선언 필수
 # local : .env 파일에서 강제로 http://127.0.0.1:8000 지정
 # prd,stg,dev : "" 빈 문자열에 뒤에 경로만 호출하면 브라우저가 현재 URL을 자동으로 붙여준다.
-ARG VITE_API_URL = "" 
+ARG VITE_API_URL=""
 ENV VITE_API_URL=$VITE_API_URL
 
 # 4. npm run build 실행
