@@ -1,0 +1,59 @@
+name: CI for Frontend - Build and Push Docker Image to Harbor
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. 시스템 Docker 설정 (login-action을 위해 검증된 방식)
+      - name: Configure Docker Daemon
+        run: |
+          sudo mkdir -p /etc/docker
+          echo '{"insecure-registries":["49.50.132.167"]}' | sudo tee /etc/docker/daemon.json
+          sudo service docker restart
+          echo "--- Docker Daemon Config ---"
+          sudo cat /etc/docker/daemon.json
+          echo "--------------------------"
+
+      # 2. Harbor 로그인 
+      #   - Docker 이미지를 푸시하기 위해 Harbor 레지스트리에 로그인합니다.
+      - name: Login to Harbor
+        uses: docker/login-action@v3
+        with:
+          # registry: Harbor 주소입니다. (http:// 부분은 제외합니다)
+          registry: 49.50.132.167
+          # username: Harbor 로그인 아이디입니다.
+          username: admin
+          # password: Harbor 로그인 비밀번호입니다.
+          # [경고!] 지금은 학습을 위해 비밀번호를 직접 입력했지만,
+          # 실제 프로덕션에서는 반드시 GitHub Secrets (${{ secrets.HARBOR_PASSWORD }})를 사용해야 합니다.
+          password: Harbor12345
+
+
+      # 3. Buildx 설정 (호스트 도커 드라이버 사용)
+      - name: Set up buildx (use host docker driver)
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+
+     
+      
+
+      # 4. Docker Build and Push
+      - name: Build and push Nginx image to Harbor
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Dockerfile이 있는 위치
+          push: true
+          tags: 49.50.132.167/llm-project/frontend:latest # 나중에 고유 태그로 변경
+          build-args: |
+            VITE_API_URL="" # 나중에 환경별로 다른 URL 주입 가능
+          #   - 소스 코드만 변경된 경우, 의존성 설치 같은 무거운 작업을 건너뛰어 빌드 시간을 분 단위로 단축시킵니다.
+          cache-to: type=inline
+          # 'cache-from'은 'inline' 방식에서는 보통 생략합니다.
+
