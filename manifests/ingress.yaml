@@ -7,11 +7,11 @@ metadata:
   namespace: llm-app-frontend
   annotations:
     # 이 규칙을 처리할 Ingress Controller를 'nginx'로 지정합니다.
-    kubernetes.io.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
     # - host: 여기에 나중에 실제 사용할 도메인을 적게 됩니다. (예: test.com)
-    host: "jinsoo.ai"
+    - host: "jinsoo.ai"
     #   지금은 비워두면, Ingress Controller가 할당하는 기본 IP 주소로 접속하게 됩니다.
     - http:
         paths:
