@@ -9,7 +9,7 @@ metadata:
 spec:
   # 안정적인 서비스를 위해 프론트엔드 파드는 2개로 시작하겠습니다.
   # Nginx는 매우 가벼워서 리소스를 거의 차지하지 않습니다.
-  replicas: 2
+  replicas: 1
 
   selector:
     # 이 Deployment가 관리할 파드의 꼬리표(Label)
