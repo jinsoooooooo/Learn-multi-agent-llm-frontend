@@ -27,7 +27,7 @@ spec:
           
           # 프론트엔드용 Dockerfile로 빌드된 이미지를 사용합니다.
           # 마찬가지로 지금은 임시 경로를 사용합니다.
-          image: your-harbor-url/llm-project/frontend:latest
+          image: 49.50.132.167/llm-project/frontend:latest
 
           # Nginx가 80번 포트에서 실행되므로, 컨테이너의 80번 포트를 개방합니다.
           ports:
