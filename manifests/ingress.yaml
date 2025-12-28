@@ -9,6 +9,7 @@ metadata:
     # 이 규칙을 처리할 Ingress Controller를 'nginx'로 지정합니다.
     kubernetes.io/ingress.class: "nginx"
 spec:
+  ingressClassName: nginx
   rules:
     # - host: 여기에 나중에 실제 사용할 도메인을 적게 됩니다. (예: test.com)
     - host: "jinsoo.ai"
