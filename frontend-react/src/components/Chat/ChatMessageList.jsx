@@ -20,7 +20,7 @@ function ChatMessageList() {
             대화를 시작하거나, 좌측에서 다른 에이전트 모드를 선택해주세요.
           </p>
           <div className="recommendation-cards">
-            <h4>이런 대화를 많이 했어요</h4>
+            <h4>이런 대화를 추천합니다</h4>
             <div className="card-grid">
               {activeAgent.recommendations &&
                 activeAgent.recommendations.map((text, index) => (

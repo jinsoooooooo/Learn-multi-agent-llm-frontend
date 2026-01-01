@@ -9,7 +9,7 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div>
-        <div className="logo">MULTI-AGENT</div>
+        <div className="logo">JINSOO.AI</div>
         <AgentMenu />
       </div>
 
