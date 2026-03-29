@@ -22,5 +22,6 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.service.targetPort | default 80 }}
-            initialDelaySeconds: 3
-            periodSeconds: 10
+            initialDelaySeconds: 15
+            timeoutSeconds: 30
+            periodSeconds: 360
