@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: health-chat
+  name: llm-multi-agent-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: health-chat
+      app: llm-multi-agent-frontend
   template:
     metadata:
       labels:
-        app: health-chat
+        app: llm-multi-agent-frontend
     spec:
       containers:
-        - name: health-chat
+        - name: llm-multi-agent-frontend
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
