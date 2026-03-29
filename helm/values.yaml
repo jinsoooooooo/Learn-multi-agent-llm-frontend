@@ -1,0 +1,8 @@
+image:
+  repository: ghcr.io/leodev901/health-chat/frontend
+  tag: "latest"
+  pullPolicy: Always
+
+service:
+  port: 80
+  targetPort: 80

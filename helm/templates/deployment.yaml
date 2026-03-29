@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-chat
+  template:
+    metadata:
+      labels:
+        app: health-chat
+    spec:
+      containers:
+        - name: health-chat
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort | default 80 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.service.targetPort | default 80 }}
+            initialDelaySeconds: 3
+            periodSeconds: 10

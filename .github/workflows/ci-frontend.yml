@@ -16,6 +16,8 @@ jobs:
           sudo mkdir -p /etc/docker
           echo '{"insecure-registries":["49.50.132.167"]}' | sudo tee /etc/docker/daemon.json
           sudo service docker restart
+          sleep 3
+          docker info > /dev/null 2>&1 || sleep 3
           echo "--- Docker Daemon Config ---"
           sudo cat /etc/docker/daemon.json
           echo "--------------------------"
@@ -60,7 +62,6 @@ jobs:
           tags: 49.50.132.167/llm-project/frontend:latest # 나중에 고유 태그로 변경
           build-args: |
             VITE_API_URL=${{ env.VITE_API_URL }}
-          #   - 소스 코드만 변경된 경우, 의존성 설치 같은 무거운 작업을 건너뛰어 빌드 시간을 분 단위로 단축시킵니다.
-          cache-to: type=inline
-          # 'cache-from'은 'inline' 방식에서는 보통 생략합니다.
+          # 캐싱 옵션 제거: 안정적인 빌드를 최우선으로 하여 오류 발생 가능성을 줄였습니다.
+          # 'cache-to: type=inline' 및 관련 기능 생략
 

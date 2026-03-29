@@ -1,7 +1,0 @@
-# /learn_fornt_end_project/manifests/namespace.yaml
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  # 프론트엔드 애플리케이션을 위한 고유한 네임스페이스 이름입니다.
-  name: llm-app-frontend
