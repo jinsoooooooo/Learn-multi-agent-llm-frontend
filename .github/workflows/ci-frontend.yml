@@ -1,4 +1,4 @@
-name: CI for Frontend - Build and Push Docker Image to Harbor
+name: CI for Frontend - Build and Push Docker Image
 on:
   push:
     branches: ["main"]
