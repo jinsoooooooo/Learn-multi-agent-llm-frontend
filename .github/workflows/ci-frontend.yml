@@ -4,9 +4,9 @@ on:
   push:
     branches: ["main"]
     paths:
-      - 'frontend/**'
-      - 'helm/frontend/**'
-      - '.github/workflows/frontend-ci.yml'
+      - 'frontend-react/**'
+      - 'helm/**'
+      - '.github/workflows/ci-frontend.yml'
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
-          context: ./frontend
+          context: ./
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
